@@ -87,8 +87,8 @@ class Player:
 class Shelter:
 
     #Инициализация убежища
-    def __init__(self,users,ctx):
-        self.load_files(ctx)
+    def __init__(self,users):
+        self.load_files()
         self.players=[]
         self.info=[]
         for user in users:
@@ -103,12 +103,11 @@ class Shelter:
             pl.get_cards(self.gen_cards())
         self.votes={}
     
-        #Загрузка всех файлов
-    async def load_files(self,ctx):
-        self.parent_dir = Path(__file__).absolute()[-1]
-        self.PATH_CARDS=self.parent_dir+"\\Cards\\"
-        self.PATH_GAME=self.parent_dir+"\\Game\\"
-        self.PATH_CATASTROPHES=self.parent_dir+"\\Cards\\catastrophes\\"
+    #Загрузка всех файлов
+    def load_files(self):
+        self.PATH_CARDS="\\Cards\\"
+        self.PATH_GAME="\\Game\\"
+        self.PATH_CATASTROPHES="\\Cards\\catastrophes\\"
         with(open(f"{self.PATH_CATASTROPHES}catastrophes.txt",'r',encoding='utf8')) as file_catastrophes:
             self.catastrophes=file_catastrophes.read().split('>')
         with(open(f"{self.PATH_CATASTROPHES}equipment.txt",'r',encoding='utf8')) as file_equipment:
@@ -695,7 +694,6 @@ async def game(ctx, end=None):
                         for member in voice_channels.members:
                             listUsers.append(member)
             index=1
-            ctx.send(__file__)
             if len(listUsers)<1:
                 embed = discord.Embed(color=discord.Colour.red())
                 embed.set_author(name="Для начала игры необходимо как минимум 6 игроков\n")
