@@ -86,8 +86,8 @@ class Player:
 class Shelter:
 
     #Инициализация убежища
-    def __init__(self,users):
-        self.load_files()
+    def __init__(self,users,ctx):
+        self.load_files(ctx)
         self.players=[]
         self.info=[]
         for user in users:
@@ -103,11 +103,14 @@ class Shelter:
         self.votes={}
     
         #Загрузка всех файлов
-    def load_files(self):
+    async def load_files(self,ctx):
         self.parent_dir = os.path.dirname(os.path.abspath(__file__))
         self.PATH_CARDS=self.parent_dir+"\\Cards\\"
         self.PATH_GAME=self.parent_dir+"\\Game\\"
         self.PATH_CATASTROPHES=self.parent_dir+"\\Cards\\catastrophes\\"
+        await ctx.send(PATH_CARDS)
+        await ctx.send(PATH_GAME)
+        await ctx.send(PATH_CATASTROPHES)
         with(open(f"{self.PATH_CATASTROPHES}catastrophes.txt",'r',encoding='utf8')) as file_catastrophes:
             self.catastrophes=file_catastrophes.read().split('>')
         with(open(f"{self.PATH_CATASTROPHES}equipment.txt",'r',encoding='utf8')) as file_equipment:
@@ -699,7 +702,7 @@ async def game(ctx, end=None):
                 embed.set_author(name="Для начала игры необходимо как минимум 6 игроков\n")
                 await ctx.send(embed=embed)
             else:
-                session=Shelter(listUsers)
+                session=Shelter(listUsers,ctx)
                 await ctx.send("Игра началась, всем отправлены карточки")
                 session.create_txt()
                 embed = discord.Embed(color=discord.Colour.blue())
