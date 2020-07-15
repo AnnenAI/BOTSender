@@ -104,6 +104,7 @@ class Shelter:
     
         #Загрузка всех файлов
     async def load_files(self,ctx):
+        await ctx.send('Начало загрузки файлов')
         self.parent_dir = os.path.dirname(os.path.abspath(__file__))
         self.PATH_CARDS=self.parent_dir+"\\Cards\\"
         self.PATH_GAME=self.parent_dir+"\\Game\\"
@@ -111,6 +112,7 @@ class Shelter:
         await ctx.send(PATH_CARDS)
         await ctx.send(PATH_GAME)
         await ctx.send(PATH_CATASTROPHES)
+        await ctx.send('Конец загрузки файлов')
         with(open(f"{self.PATH_CATASTROPHES}catastrophes.txt",'r',encoding='utf8')) as file_catastrophes:
             self.catastrophes=file_catastrophes.read().split('>')
         with(open(f"{self.PATH_CATASTROPHES}equipment.txt",'r',encoding='utf8')) as file_equipment:
