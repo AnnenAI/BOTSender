@@ -88,31 +88,27 @@ class Shelter:
     #Инициализация убежища
     def __init__(self,users,ctx):
         self.load_files(ctx)
-        self.players=[]
-        self.info=[]
-        for user in users:
-            self.players.append(Player(user))
-        self.count_players=len(self.players)
-        self.capacity=self.count_players//2
-        self.gen_shelter()
-        if os.path.exists(self.PATH_GAME):
-            shutil.rmtree(self.PATH_GAME,ignore_errors=True)
-        os.mkdir(self.PATH_GAME)
-        for pl in self.players:
-            pl.get_cards(self.gen_cards())
-        self.votes={}
+        try:
+            self.players=[]
+            self.info=[]
+            for user in users:
+                self.players.append(Player(user))
+            self.count_players=len(self.players)
+            self.capacity=self.count_players//2
+            self.gen_shelter()
+            if os.path.exists(self.PATH_GAME):
+                shutil.rmtree(self.PATH_GAME,ignore_errors=True)
+            os.mkdir(self.PATH_GAME)
+            for pl in self.players:
+                pl.get_cards(self.gen_cards())
+            self.votes={}
     
         #Загрузка всех файлов
     async def load_files(self,ctx):
-        await ctx.send('Начало загрузки файлов')
         self.parent_dir = os.path.dirname(os.path.abspath(__file__))
         self.PATH_CARDS=self.parent_dir+"\\Cards\\"
         self.PATH_GAME=self.parent_dir+"\\Game\\"
         self.PATH_CATASTROPHES=self.parent_dir+"\\Cards\\catastrophes\\"
-        await ctx.send(PATH_CARDS)
-        await ctx.send(PATH_GAME)
-        await ctx.send(PATH_CATASTROPHES)
-        await ctx.send('Конец загрузки файлов')
         with(open(f"{self.PATH_CATASTROPHES}catastrophes.txt",'r',encoding='utf8')) as file_catastrophes:
             self.catastrophes=file_catastrophes.read().split('>')
         with(open(f"{self.PATH_CATASTROPHES}equipment.txt",'r',encoding='utf8')) as file_equipment:
