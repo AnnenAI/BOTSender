@@ -86,8 +86,8 @@ class Player:
 class Shelter:
 
     #Инициализация убежища
-    def __init__(self,users):
-        self.load_files()
+    def __init__(self,users,ctx):
+        self.load_files(ctx)
         self.players=[]
         self.info=[]
         for user in users:
@@ -96,41 +96,45 @@ class Shelter:
         self.capacity=self.count_players//2
         self.gen_shelter()
         if os.path.exists(self.PATH_GAME):
-            shutil.rmtree(self.PATH_GAME)
+            shutil.rmtree(self.PATH_GAME,ignore_errors=True)
         os.mkdir(self.PATH_GAME)
         for pl in self.players:
             pl.get_cards(self.gen_cards())
         self.votes={}
     
         #Загрузка всех файлов
-    def load_files(self):
-        #self.PATH_CARDS="C:\\Users\Admin\Python\BOTSender\Cards\\"
-        #self.PATH_GAME="C:\\Users\Admin\Python\BOTSender\Game\\"
-        #self.PATH_CATASTROPHES="C:\\Users\Admin\Python\BOTSender\Cards\catastrophes\\"
-        parent_dir = os.path.dirname(os.path.abspath(__file__))
-        self.PATH_CARDS=parent_dir+"\\Cards\\"
-        self.PATH_GAME=parent_dir+"\\Game\\"
-        self.PATH_CATASTROPHES=parent_dir+"\\Cards\\catastrophes\\"
-        with(open(f"{self.PATH_CATASTROPHES}catastrophes.txt",'r',encoding='utf8')) as file_catastrophes:
-            self.catastrophes=file_catastrophes.read().split('>')
-        with(open(f"{self.PATH_CATASTROPHES}equipment.txt",'r',encoding='utf8')) as file_equipment:
-            self.equipment=file_equipment.read().split('\n')
-        with(open(f"{self.PATH_CARDS}prof.txt",'r',encoding='utf8')) as file_prof:
-            self.prof=file_prof.read().split('\n')
-        with(open(f"{self.PATH_CARDS}health.txt",'r',encoding='utf8')) as file_health:
-            self.health=file_health.read().split('\n')
-        with(open(f"{self.PATH_CARDS}fear.txt",'r',encoding='utf8')) as file_fear:
-            self.fear=file_fear.read().split('\n')
-        with(open(f"{self.PATH_CARDS}hobby.txt",'r',encoding='utf8')) as file_hobby:
-            self.hobby=file_hobby.read().split('\n')
-        with(open(f"{self.PATH_CARDS}addons.txt",'r',encoding='utf8')) as file_addons:
-            self.addons=file_addons.read().split('\n')
-        with(open(f"{self.PATH_CARDS}character.txt",'r',encoding='utf8')) as file_character:
-            self.character=file_character.read().split('\n')
-        with(open(f"{self.PATH_CARDS}baggage.txt",'r',encoding='utf8')) as file_baggage:
-            self.baggage=file_baggage.read().split('\n')
-        with(open(f"{self.PATH_CARDS}goldCard.txt",'r',encoding='utf8')) as file_gold_card:
-            self.goldCard=file_gold_card.read().split('\n')
+    def load_files(self,ctx):
+        try:
+            self.parent_dir = os.path.dirname(os.path.abspath(__file__))
+            self.PATH_CARDS=self.parent_dir+"\\Cards\\"
+            self.PATH_GAME=self.parent_dir+"\\Game\\"
+            self.PATH_CATASTROPHES=self.parent_dir+"\\Cards\\catastrophes\\"
+            with(open(f"{self.PATH_CATASTROPHES}catastrophes.txt",'r',encoding='utf8')) as file_catastrophes:
+                self.catastrophes=file_catastrophes.read().split('>')
+            with(open(f"{self.PATH_CATASTROPHES}equipment.txt",'r',encoding='utf8')) as file_equipment:
+                self.equipment=file_equipment.read().split('\n')
+            with(open(f"{self.PATH_CARDS}prof.txt",'r',encoding='utf8')) as file_prof:
+                self.prof=file_prof.read().split('\n')
+            with(open(f"{self.PATH_CARDS}health.txt",'r',encoding='utf8')) as file_health:
+                self.health=file_health.read().split('\n')
+            with(open(f"{self.PATH_CARDS}fear.txt",'r',encoding='utf8')) as file_fear:
+                self.fear=file_fear.read().split('\n')
+            with(open(f"{self.PATH_CARDS}hobby.txt",'r',encoding='utf8')) as file_hobby:
+                self.hobby=file_hobby.read().split('\n')
+            with(open(f"{self.PATH_CARDS}addons.txt",'r',encoding='utf8')) as file_addons:
+                self.addons=file_addons.read().split('\n')
+            with(open(f"{self.PATH_CARDS}character.txt",'r',encoding='utf8')) as file_character:
+                self.character=file_character.read().split('\n')
+            with(open(f"{self.PATH_CARDS}baggage.txt",'r',encoding='utf8')) as file_baggage:
+                self.baggage=file_baggage.read().split('\n')
+            with(open(f"{self.PATH_CARDS}goldCard.txt",'r',encoding='utf8')) as file_gold_card:
+                self.goldCard=file_gold_card.read().split('\n')
+        except:
+            embed = discord.Embed(color=discord.Colour.red())
+            embed.set_author(name="Не могу загрузить файлы")
+            await ctx.message.author.send(embed=embed)
+
+        
     
     #Функция создания информации о убежище
     def gen_shelter(self):
@@ -702,7 +706,7 @@ async def game(ctx, end=None):
                 embed.set_author(name="Для начала игры необходимо как минимум 6 игроков\n")
                 await ctx.send(embed=embed)
             else:
-                session=Shelter(listUsers)
+                session=Shelter(listUsers,ctx)
                 await ctx.send("Игра началась, всем отправлены карточки")
                 await ctx.send(len(session.goldCard))
                 session.create_txt()
