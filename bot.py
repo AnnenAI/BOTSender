@@ -132,7 +132,7 @@ class Shelter:
         except:
             embed = discord.Embed(color=discord.Colour.red())
             embed.set_author(name="Не могу загрузить файлы")
-            await ctx.message.author.send(embed=embed)
+            await ctx.send(embed=embed)
 
         
     
