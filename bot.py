@@ -703,6 +703,13 @@ async def game(ctx, end=None):
                 await ctx.send(embed=embed)
             else:
                 session=Shelter(listUsers,ctx)
+                try:
+                    await ctx.send(session.parent_dir)
+                    await ctx.send(session.PATH_CARDS)
+                    await ctx.send(session.PATH_GAME)
+                    await ctx.send(session.PATH_CATASTROPHES)
+                except:
+                    pass
                 await ctx.send("Игра началась, всем отправлены карточки")
                 session.create_txt()
                 embed = discord.Embed(color=discord.Colour.blue())
