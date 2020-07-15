@@ -102,6 +102,8 @@ class Shelter:
             for pl in self.players:
                 pl.get_cards(self.gen_cards())
             self.votes={}
+        except:
+            pass
     
         #Загрузка всех файлов
     async def load_files(self,ctx):
