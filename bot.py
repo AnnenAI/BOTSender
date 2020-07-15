@@ -6,7 +6,6 @@ import discord
 import shutil
 import asyncio
 import time
-from unipath import Path
 from discord.ext import commands
 
 
@@ -105,9 +104,10 @@ class Shelter:
     
     #Загрузка всех файлов
     def load_files(self):
-        self.PATH_CARDS="\\Cards\\"
-        self.PATH_GAME="\\Game\\"
-        self.PATH_CATASTROPHES="\\Cards\\catastrophes\\"
+        parent_dir = os.path.dirname(os.path.abspath(__file__))
+        self.PATH_CARDS=parent_dir+"\\Cards\\"
+        self.PATH_GAME=parent_dir+"\\Game\\"
+        self.PATH_CATASTROPHES=parent_dir+"\\Cards\\catastrophes\\"
         with(open(f"{self.PATH_CATASTROPHES}catastrophes.txt",'r',encoding='utf8')) as file_catastrophes:
             self.catastrophes=file_catastrophes.read().split('>')
         with(open(f"{self.PATH_CATASTROPHES}equipment.txt",'r',encoding='utf8')) as file_equipment:
