@@ -88,27 +88,23 @@ class Shelter:
     #Инициализация убежища
     def __init__(self,users,ctx):
         self.load_files(ctx)
-        try:
-            self.players=[]
-            self.info=[]
-            for user in users:
-                self.players.append(Player(user))
-            self.count_players=len(self.players)
-            self.capacity=self.count_players//2
-            self.gen_shelter()
-            if os.path.exists(self.PATH_GAME):
-                shutil.rmtree(self.PATH_GAME,ignore_errors=True)
-            os.mkdir(self.PATH_GAME)
-            for pl in self.players:
-                pl.get_cards(self.gen_cards())
-            self.votes={}
-        except:
-            pass
+        self.players=[]
+        self.info=[]
+        for user in users:
+            self.players.append(Player(user))
+        self.count_players=len(self.players)
+        self.capacity=self.count_players//2
+        self.gen_shelter()
+        if os.path.exists(self.PATH_GAME):
+            shutil.rmtree(self.PATH_GAME,ignore_errors=True)
+        os.mkdir(self.PATH_GAME)
+        for pl in self.players:
+            pl.get_cards(self.gen_cards())
+        self.votes={}
     
         #Загрузка всех файлов
     async def load_files(self,ctx):
-        #self.parent_dir = os.path.dirname(os.path.abspath(__file__))
-        self.parent_dir = ''
+        self.parent_dir = os.path.dirname(os.path.abspath(__file__))
         self.PATH_CARDS=self.parent_dir+"\\Cards\\"
         self.PATH_GAME=self.parent_dir+"\\Game\\"
         self.PATH_CATASTROPHES=self.parent_dir+"\\Cards\\catastrophes\\"
@@ -698,6 +694,7 @@ async def game(ctx, end=None):
                         for member in voice_channels.members:
                             listUsers.append(member)
             index=1
+            ctx.send(os.path.dirname(os.path.abspath(__file__)))
             if len(listUsers)<1:
                 embed = discord.Embed(color=discord.Colour.red())
                 embed.set_author(name="Для начала игры необходимо как минимум 6 игроков\n")
