@@ -187,7 +187,7 @@ class Shelter:
     def gen_bio(self):
         gender=['Мужчина','Женщина']
         orientations=['Гетеросексуал','Гетеросексуал(Чайлдфри)','Гетеросексуал','Асексуал','Гетеросексуал','Бисексуал','Гетеросексуал','Гомосексуал']
-        bioString=f"{random.choice(gender)}, {str(random.randint(17, 70))} лет ({random.choice(orientations)})"
+        bioString=f"{random.choice(gender)}, {str(random.randint(16, 65))} лет ({random.choice(orientations)})"
         return bioString
 
     #Функция получения Профессии
@@ -275,7 +275,7 @@ async def help(ctx):
         fields=""
         embed = discord.Embed(color=discord.Colour.red())
         embed.set_author(name='Команды бота')
-        fields+=f"**!start** --> Начать игру\n"
+        fields+=f"**!game** --> Начать игру\n"
         fields+=f"**!card** --> Поменять карточку\n"
         fields+=f"**!cards** --> Поменять карточку всем игрокам\n"
         fields+=f"**!vote** --> Голосование за изгнание\n"
@@ -290,14 +290,14 @@ async def help(ctx):
     
 def switch_change(x):
    return {
-        '1': f"Профессия:{game.gen_prof()}",
-        '2': f"Биографические характеристики:{game.gen_bio()}",
-        '3': f"Здоровье:{game.gen_health()}",
-        '4': f"Человеческое качество:{game.gen_character()}",
-        '5': f"Фобия:{game.gen_fear()}",
-        '6': f"Хобби:{game.gen_hobby()}",
-        '7': f"Багаж:{game.gen_baggage()}",
-        '8': f"Дополнительная информация:{game.gen_addons()}"
+        '1': f"Профессия:{session.gen_prof()}",
+        '2': f"Биографические характеристики:{session.gen_bio()}",
+        '3': f"Здоровье:{session.gen_health()}",
+        '4': f"Человеческое качество:{session.gen_character()}",
+        '5': f"Фобия:{session.gen_fear()}",
+        '6': f"Хобби:{session.gen_hobby()}",
+        '7': f"Багаж:{session.gen_baggage()}",
+        '8': f"Дополнительная информация:{session.gen_addons()}"
     }.get(x)
     
 #Команда БОТА -  замены карточки с игроком
@@ -306,11 +306,11 @@ async def swap(ctx,field=None,pl=None):
     try:
         user=ctx.message.author
         await ctx.message.delete()
-        if game.exists(user.display_name) is None:
+        if session.exists(user.display_name) is None:
             raise NameError('Игрок покинул игру').with_traceback(traceback_obj)
         fields=""
         embed = discord.Embed(color=discord.Colour(0x332842))
-        if field is None or int(field)>8 or int(field)<1 or pl is None or int(pl)<1 or int(pl)>len(game.players):
+        if field is None or int(field)>8 or int(field)<1 or pl is None or int(pl)<1 or int(pl)>len(session.players):
             embed.set_author(name='Команда чтобы поменяться карточкой с игроком')
             fields+=f"**!swap 1 Номер игрока** --> Профессия\n"
             fields+=f"**!swap 2 Номер игрока** --> Биографические характеристики\n"
@@ -323,13 +323,13 @@ async def swap(ctx,field=None,pl=None):
             embed.description=fields
             await user.send(embed=embed)
         else:
-            user1=game.players[game.exists(user.display_name)]
+            user1=session.players[session.exists(user.display_name)]
             field=switch_show(field)
-            game.swap(user1.name,int(pl)-1,field)
+            session.swap(user1.name,int(pl)-1,field)
             embed.set_author(name=f"{field} : {user1.Cards[field]}")
             embed.description=f"Измененная карточка для игрока: {user1.name}"
             await user1.link.send(embed=embed)
-            user2=game.players[int(pl)-1]
+            user2=session.players[int(pl)-1]
             embed.set_author(name=f"{field}:{user2.Cards[field]}")
             embed.description=f"Измененная карточка для игрока: {user2.name}"
             await user2.link.send(embed=embed)
@@ -351,7 +351,7 @@ async def shift(ctx,field=None):
     try:
         user=ctx.message.author
         await ctx.message.delete()
-        if game.exists(user.display_name) is None:
+        if session.exists(user.display_name) is None:
             raise NameError('Игрок покинул игру').with_traceback(traceback_obj)
         fields=""
         embed = discord.Embed(color=discord.Colour(0x223d4a))
@@ -369,8 +369,8 @@ async def shift(ctx,field=None):
             await user.send(embed=embed)
         else:
             field=switch_show(field)
-            game.shift(field)
-            for pl in game.players:
+            session.shift(field)
+            for pl in session.players:
                 embed.set_author(name=f"{field} : {pl.Cards[field]}")
                 embed.description=f"Измененная карточка для игрока: {pl.name}"
                 await pl.link.send(embed=embed)
@@ -392,7 +392,7 @@ async def card(ctx,arg=None):
     try:
         user = ctx.message.author
         await ctx.message.delete()
-        if game.exists(user.display_name) is None:
+        if session.exists(user.display_name) is None:
             raise NameError('Игрок покинул игру').with_traceback(traceback_obj)
         await ctx.message.delete()
         fields=""
@@ -412,10 +412,10 @@ async def card(ctx,arg=None):
         else:
             changed_card=switch_change(arg)
             field=list(changed_card.split(':'))[0]
-            member=game.exists(user.display_name)
-            game.players[member].change_card(list(changed_card.split(':')))
+            member=session.exists(user.display_name)
+            session.players[member].change_card(list(changed_card.split(':')))
             embed.set_author(name=changed_card)
-            embed.description=f"Измененная карточка для игрока: {game.players[member].name}"
+            embed.description=f"Измененная карточка для игрока: {session.players[member].name}"
             await user.send(embed=embed)
             embed.set_author(name=f"Игрок {user.display_name} поменял себе карточку")
             embed.description=f"Карточка : {field}"
@@ -435,7 +435,7 @@ async def cards(ctx,arg=None):
     try: 
         user=ctx.message.author
         await ctx.message.delete()
-        if game.exists(user.display_name) is None:
+        if session.exists(user.display_name) is None:
             raise NameError('Игрок покинул игру').with_traceback(traceback_obj)
         fields=""
         if (arg is None or int(arg)>8 or int(arg)<1):
@@ -452,7 +452,7 @@ async def cards(ctx,arg=None):
             embed.description=fields
             await user.send(embed=embed)
         else:
-            for member in game.players:
+            for member in session.players:
                 user=member.link
                 changed_card=switch_change(arg)
                 field=list(changed_card.split(':'))[0]
@@ -480,11 +480,11 @@ async def txt(ctx):
     try:
         await ctx.message.delete()
     finally:
-        game.create_txt()
+        session.create_txt()
         embed = discord.Embed(color=discord.Colour.red())
         user = ctx.message.author
-        await user.send(file=discord.File(f"{game.PATH_GAME}{user.display_name}.txt"))
-        for usr in game.players:
+        await user.send(file=discord.File(f"{session.PATH_GAME}{user.display_name}.txt"))
+        for usr in session.players:
             if usr.name==user.display_name:
                 embed.set_author(name=f"Игрок {usr.name}")
                 embed.description=usr.print_cards()
@@ -501,15 +501,15 @@ async def player(ctx, index=None,arg=None):
         pass
     finally:
         embed = discord.Embed(color=discord.Colour(0xc2828e))
-        if index is None or int(index)>len(game.players) or int(index)<1:
+        if index is None or int(index)>len(session.players) or int(index)<1:
             embed.set_author(name='Получить иноформацию о игроке')
-            for i in range(0,len(game.players)):
-                fields+=f"{game.players[i].name} --> **!player {i+1}**\n"
+            for i in range(0,len(session.players)):
+                fields+=f"{session.players[i].name} --> **!player {i+1}**\n"
                 embed.description=fields
         else:
             i=int(index)-1
-            embed.description=game.players[i].print_showed_cards()
-            embed.set_author(name=f"Игрок  {game.players[i].name}")
+            embed.description=session.players[i].print_showed_cards()
+            embed.set_author(name=f"Игрок  {session.players[i].name}")
         if not arg is None:
             await ctx.send(embed=embed)
         else:
@@ -524,8 +524,8 @@ async def players(ctx):
     finally:
         members=""
         embed = discord.Embed(color=discord.Colour(0xbec282))
-        for i in range(0,len(game.players)):
-            members+=f"**{i+1}. {game.players[i].name}**\n"
+        for i in range(0,len(session.players)):
+            members+=f"**{i+1}. {session.players[i].name}**\n"
         embed.description=members
         embed.set_author(name="Игроки которые участвуют в игре")
         await user.send(embed=embed)
@@ -551,7 +551,7 @@ async def show(ctx, arg=None):
     user = ctx.message.author
     try:
         await ctx.message.delete()
-        if game.exists(user.display_name) is None:
+        if session.exists(user.display_name) is None:
             raise NameError('PlayerNotFound').with_traceback(traceback_obj)
         fields=""
         embed = discord.Embed(color=discord.Colour.purple())
@@ -570,7 +570,7 @@ async def show(ctx, arg=None):
             embed.description=fields
             await user.send(embed=embed)
         else:
-            for pl in game.players:
+            for pl in session.players:
                 if pl.name==user.display_name:
                     res=pl.show_card(switch_show(arg))
             if res is None:
@@ -580,13 +580,13 @@ async def show(ctx, arg=None):
             else:
                 if int(arg)==9 or int(arg)==10:
                     if not res.find('убежище,')==-1 or not res.find('погреб')==-1:
-                        game.info+='\n'+list(res.split(':'))[1]
+                        session.info+='\n'+list(res.split(':'))[1]
                     if not res.find('меньше на 1 место')==-1:
-                        game.info=game.info.replace(f"Вместимость убежища—{game.capacity}",f"Вместимость убежища—{game.capacity-1}")
-                        game.capacity-=1
+                        session.info=session.info.replace(f"Вместимость убежища—{session.capacity}",f"Вместимость убежища—{session.capacity-1}")
+                        session.capacity-=1
                     if not res.find('больше на 1 место')==-1:
-                        game.info=game.info.replace(f"Вместимость убежища—{game.capacity}",f"Вместимость убежища—{game.capacity+1}")
-                        game.capacity+=1
+                        session.info=session.info.replace(f"Вместимость убежища—{session.capacity}",f"Вместимость убежища—{session.capacity+1}")
+                        session.capacity+=1
                 embed.set_author(name=res)
                 embed.description=f"Игрок **{user.display_name}** открыл карточку"
                 await ctx.send(embed=embed)
@@ -601,18 +601,18 @@ async def show(ctx, arg=None):
 
 
 def add_vote(user,voter):
-    if len(game.votes)>0:
-            for vote in list(game.votes.keys()):
-                if voter in game.votes[vote]:
-                    if len(game.votes[vote])==1:
-                        del game.votes[vote]
+    if len(session.votes)>0:
+            for vote in list(session.votes.keys()):
+                if voter in session.votes[vote]:
+                    if len(session.votes[vote])==1:
+                        del session.votes[vote]
                     else:
-                        game.votes[vote].remove(voter)
+                        session.votes[vote].remove(voter)
     if not user==None:
-        if user in game.votes.keys():
-            game.votes[user].append(voter)
+        if user in session.votes.keys():
+            session.votes[user].append(voter)
         else:
-            game.votes[user]=[voter]
+            session.votes[user]=[voter]
 
 #Команда БОТА -  получения информации о убежище
 @bot.command(pass_context=True)
@@ -626,7 +626,7 @@ async def info(ctx,author=None):
     finally:
         embed = discord.Embed(color=discord.Colour.green())
         embed.set_author(name="Информация о убежище")
-        embed.description=game.info
+        embed.description=session.info
         await sender.send(embed=embed)
         
 #Команда БОТА -  голосования за изгнание игрока
@@ -635,21 +635,21 @@ async def vote(ctx,arg=None):
     sender=ctx.message.author
     try:
         await ctx.message.delete()
-        if game.exists(sender.display_name) is  None:
+        if session.exists(sender.display_name) is  None:
             raise NameError('Игрок покинул игру').with_traceback(traceback_obj)
         embed = discord.Embed(color=discord.Colour.green())
         fields=""
         embed.set_author(name='Голосование за изгнание')
         if (arg=='accept'):
-            bedolaga=list(game.votes.keys())[0]
+            bedolaga=list(session.votes.keys())[0]
             await ctx.send(f"{bedolaga} покидает нас, пока пока")
-            game.kick_player(bedolaga)
-            game.votes.clear()
-            if game.capacity==game.count_players:
-                await start(ctx, 'end')
-        elif (arg is None or int(arg)>len(game.players)):
-            for member in range(0,len(game.players)):
-                user=game.players[member].name
+            session.kick_player(bedolaga)
+            session.votes.clear()
+            if session.capacity==session.count_players:
+                await game(ctx, 'end')
+        elif (arg is None or int(arg)>len(session.players)):
+            for member in range(0,len(session.players)):
+                user=session.players[member].name
                 fields+=f"{user} --> **!vote {member+1}**\n"
                 embed.description=fields
             await sender.send(embed=embed)
@@ -657,12 +657,12 @@ async def vote(ctx,arg=None):
             if int(arg)==0:
                 user=None
             else:
-                user=game.players[int(arg)-1].name
+                user=session.players[int(arg)-1].name
             voter= sender.display_name
             add_vote(user,voter)
-            game.votes=dict(sorted(game.votes.items(), key=lambda i: -len(i[1])))
-            for vote in game.votes.keys():
-                fields+=f"**{len(game.votes[vote])}** за изгнание **{vote}**, тебя не любят **: {', '.join(game.votes[vote])}**\n"
+            session.votes=dict(sorted(session.votes.items(), key=lambda i: -len(i[1])))
+            for vote in session.votes.keys():
+                fields+=f"**{len(session.votes[vote])}** за изгнание **{vote}**, тебя не любят **: {', '.join(session.votes[vote])}**\n"
             embed.description=fields
             await ctx.send(embed=embed)
     except NameError:
@@ -676,7 +676,7 @@ async def vote(ctx,arg=None):
 
 #Начало игры COMMAND==> !start
 @bot.command(pass_context=True)
-async def start(ctx, end=None):
+async def game(ctx, end=None):
     sender=ctx.message.author
     try:
         await ctx.message.delete()
@@ -688,7 +688,7 @@ async def start(ctx, end=None):
         pass
     finally:
         if end is None:
-            global game
+            global session
             listUsers=[]
             voice_channel_list = ctx.guild.voice_channels
             for voice_channels in voice_channel_list:
@@ -702,14 +702,14 @@ async def start(ctx, end=None):
                 embed.set_author(name="Для начала игры необходимо как минимум 6 игроков\n")
                 await ctx.send(embed=embed)
             else:
-                game=Shelter(listUsers)
+                session=Shelter(listUsers)
                 await ctx.send("Игра началась, всем отправлены карточки")
-                await ctx.send(len(game.goldCard))
-                game.create_txt()
+                await ctx.send(len(session.goldCard))
+                session.create_txt()
                 embed = discord.Embed(color=discord.Colour.blue())
-                for member in game.players:
+                for member in session.players:
                     user=member.link
-                    await user.send(file=discord.File(f"{game.PATH_GAME}{user.display_name}.txt"))
+                    await user.send(file=discord.File(f"{session.PATH_GAME}{user.display_name}.txt"))
                     await info(ctx,user)
                     embed.set_author(name=f"Игрок  {member.name}")
                     embed.description=member.print_cards()
@@ -718,9 +718,9 @@ async def start(ctx, end=None):
             embed = discord.Embed(color=discord.Colour.red())
             embed.set_author(name="Игра закончилась, спасибо за игру! В убежище попали:\n")
             await ctx.send(embed=embed)
-            for i in range(1,len(game.players)+1):
+            for i in range(1,len(session.players)+1):
                 await player(ctx,i,"end")
-            del game
+            del session
 
 def run_client(client, *args, **kwargs):
     loop = asyncio.get_event_loop()
