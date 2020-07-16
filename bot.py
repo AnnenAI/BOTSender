@@ -263,7 +263,6 @@ class Shelter:
 
 #link to add https://discordapp.com/oauth2/authorize?&client_id=732540975670493214&scope=bot&permissions=8
 TOKEN = 'NzMyNTQwOTc1NjcwNDkzMjE0.Xw2IWw.9TUSCNAnmc4_ps-HnRkWLNq_NKA'
-#TOKEN = 'NzI1NjcxNDA1OTQ5Mjg4NTUw.XvSKEw.5dimLxe21rtH3eRmejZn7sUDgjs'
 bot = commands.Bot(command_prefix='!')
 bot.remove_command("help")
 
