@@ -699,7 +699,7 @@ async def game(ctx, end=None):
                 embed.set_author(name="Для начала игры необходимо как минимум 6 игроков\n")
                 await ctx.send(embed=embed)
             else:
-                session=Shelter(listUsers,ctx)
+                session=Shelter(listUsers)
                 await ctx.send("Игра началась, всем отправлены карточки")
                 session.create_txt()
                 embed = discord.Embed(color=discord.Colour.blue())
