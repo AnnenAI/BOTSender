@@ -648,6 +648,8 @@ async def vote(ctx,arg=None):
             session.votes.clear()
             if session.capacity==session.count_players:
                 await game(ctx, 'end')
+        elif (arg=='cancel'):
+            session.votes.clear()
         elif (arg is None or int(arg)>len(session.players)):
             for member in range(0,len(session.players)):
                 user=session.players[member].name
@@ -698,6 +700,7 @@ async def game(ctx, end=None):
                         for member in voice_channels.members:
                             listUsers.append(member)
             index=1
+            listUsers=sorted(listUsers, key=lambda x: x.display_name)
             if len(listUsers)<1:
                 embed = discord.Embed(color=discord.Colour.red())
                 embed.set_author(name="Для начала игры необходимо как минимум 6 игроков\n")
