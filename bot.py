@@ -650,6 +650,7 @@ async def vote(ctx,arg=None):
                 await game(ctx, 'end')
         elif (arg=='cancel'):
             session.votes.clear()
+            await ctx.send("Голосование отменено")
         elif (arg is None or int(arg)>len(session.players)):
             for member in range(0,len(session.players)):
                 user=session.players[member].name
