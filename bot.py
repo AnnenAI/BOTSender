@@ -713,6 +713,7 @@ async def game(ctx, end=None):
                 embed = discord.Embed(color=discord.Colour.blue())
                 for member in session.players:
                     user=member.link
+                    await user.send("=============Новая игра=============")
                     await user.send(file=discord.File(f"{session.PATH_GAME}{user.display_name}.txt"))
                     await info(ctx,user)
                     embed.set_author(name=f"Игрок  {member.name}")
