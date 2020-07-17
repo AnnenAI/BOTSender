@@ -698,6 +698,7 @@ async def game(ctx, end=None):
                         for member in voice_channels.members:
                             listUsers.append(member)
             index=1
+            listUsers.sort(key=display_name)
             if len(listUsers)<1:
                 embed = discord.Embed(color=discord.Colour.red())
                 embed.set_author(name="Для начала игры необходимо как минимум 6 игроков\n")
