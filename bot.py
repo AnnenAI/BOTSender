@@ -735,6 +735,6 @@ def run_client(client, *args, **kwargs):
         except Exception as e:
             print("Error", e)  # or use proper logging
             print("Waiting until restart")
-        time.sleep(30)
+        time.sleep(1800)
 
 run_client(bot,TOKEN)
