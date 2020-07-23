@@ -262,7 +262,7 @@ class Shelter:
                     file.write("=======================================================================\n\n")
 
 #link to add https://discordapp.com/oauth2/authorize?&client_id=732540975670493214&scope=bot&permissions=8
-TOKEN = 'NzMyNTQwOTc1NjcwNDkzMjE0.Xw2IWw.9TUSCNAnmc4_ps-HnRkWLNq_NKA'
+TOKEN = 'NzMyNTQwOTc1NjcwNDkzMjE0.XxljYA.hwRORb2zNgaAbaIuquVRQYpMqSc'
 bot = commands.Bot(command_prefix='!')
 bot.remove_command("help")
 
@@ -735,6 +735,6 @@ def run_client(client, *args, **kwargs):
         except Exception as e:
             print("Error", e)  # or use proper logging
             print("Waiting until restart")
-        time.sleep(5)
+        time.sleep(30)
 
 run_client(bot,TOKEN)
