@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+import os
+import copy
+import random
+import shutil
+from Player import Player
+
 class Shelter:
 
     #Инициализация убежища

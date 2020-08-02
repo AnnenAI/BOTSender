@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
-import random
-import copy
-import os
 import discord
-import shutil
 import asyncio
 import time
 from discord.ext import commands
-import .Player
-import .Shelter
+from Shelter import Shelter
 
 #link to add https://discordapp.com/oauth2/authorize?&client_id=732540975670493214&scope=bot&permissions=8
 TOKEN = 'NzMyNTQwOTc1NjcwNDkzMjE0.XxljYA.hwRORb2zNgaAbaIuquVRQYpMqSc'

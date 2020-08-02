@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+import copy
+
 class Player:
     #Функция инициализации игрока
     def __init__(self,user):
