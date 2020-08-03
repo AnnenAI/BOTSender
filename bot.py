@@ -296,7 +296,8 @@ async def show(ctx, arg=None):
     user = ctx.message.author
     try:
         await ctx.message.delete()
-        if session.exists(user.display_name) is None:
+        id_player=session.exists(user.display_name)
+        if id_player is None:
             raise NameError('PlayerNotFound').with_traceback(traceback_obj)
         fields=""
         embed = discord.Embed(color=discord.Colour.purple())
@@ -323,6 +324,7 @@ async def show(ctx, arg=None):
                 embed.description="Эта карточка уже открыта"
                 await user.send(embed=embed)
             else:
+                #Специальные карточки
                 if int(arg)==9 or int(arg)==10:
                     if not res.find('убежище,')==-1 or not res.find('погреб')==-1:
                         session.info+='\n'+list(res.split(':'))[1]
@@ -332,6 +334,11 @@ async def show(ctx, arg=None):
                     if not res.find('больше на 1 место')==-1:
                         session.info=session.info.replace(f"Вместимость убежища—{session.capacity}",f"Вместимость убежища—{session.capacity+1}")
                         session.capacity+=1
+                    if not res.find('вылечить твою фобию')==-1:
+                        session.players[id_player].change_card(["Фобия","Нет фобии"])
+                    if not res.find('лечит твое здоровье')==-1:
+                        session.players[id_player].change_card(["Здоровье","Идеально здоров"])
+                #Специальные карточки      
                 embed.set_author(name=res)
                 embed.description=f"Игрок **{user.display_name}** открыл карточку"
                 await ctx.send(embed=embed)

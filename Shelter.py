@@ -27,11 +27,6 @@ class Shelter:
     #Загрузка всех файлов
     def load_files(self):
         parent_dir = os.path.dirname(os.path.abspath(__file__))
-        #local
-        #self.PATH_CARDS=parent_dir+"\\Cards\\"
-        #self.PATH_GAME=parent_dir+"\\Game\\"
-        #self.PATH_CATASTROPHES=parent_dir+"\\Cards\\catastrophes\\"
-        #server
         self.PATH_CARDS=parent_dir+"/Cards/"
         self.PATH_GAME=parent_dir+"/Game/"
         self.PATH_CATASTROPHES=parent_dir+"/Cards/catastrophes/"
