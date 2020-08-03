@@ -3,7 +3,7 @@ import os
 import copy
 import random
 import shutil
-import Player
+from Player import Player
 
 class Shelter:
 
