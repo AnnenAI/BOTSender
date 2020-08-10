@@ -18,7 +18,7 @@ bot.remove_command("help")
 @bot.command(pass_context=True)
 async def help(ctx):
     user = ctx.message.author
-    user.send(ctx.message.channel.mention)
+    await user.send(ctx.message.channel.mention)
     try:    
         await ctx.message.delete()
     finally:
