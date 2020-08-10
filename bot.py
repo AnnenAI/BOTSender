@@ -10,10 +10,15 @@ TOKEN = 'NzMyNTQwOTc1NjcwNDkzMjE0.XxljYA.hwRORb2zNgaAbaIuquVRQYpMqSc'
 bot = commands.Bot(command_prefix='!')
 bot.remove_command("help")
 
+#channel = bot.get_channel(12324234183172)
+#ctx.message.channel.mention
+
+
 #Команда БОТА - Информация о командах бота
 @bot.command(pass_context=True)
 async def help(ctx):
     user = ctx.message.author
+    user.send(ctx.message.channel.mention)
     try:    
         await ctx.message.delete()
     finally:
@@ -484,7 +489,7 @@ def run_client(client, *args, **kwargs):
         try:
             loop.run_until_complete(client.start(*args, **kwargs))
         except Exception as e:
-            print("Error", e)  # or use proper logging
+            print("Error", e)
             print("Waiting until restart")
         time.sleep(1800)
 
