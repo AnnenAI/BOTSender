@@ -10,15 +10,11 @@ TOKEN = 'NzMyNTQwOTc1NjcwNDkzMjE0.XxljYA.hwRORb2zNgaAbaIuquVRQYpMqSc'
 bot = commands.Bot(command_prefix='!')
 bot.remove_command("help")
 
-#channel = bot.get_channel(12324234183172)
-#ctx.message.channel.mention
-
-
 #Команда БОТА - Информация о командах бота
 @bot.command(pass_context=True)
 async def help(ctx):
     user = ctx.message.author
-    channel_id=ctx.message.channel.mention
+    channel_id=ctx.message.channel.id
     channel = bot.get_channel(channel_id)
     await channel.send("This is Channel")
     try:    
