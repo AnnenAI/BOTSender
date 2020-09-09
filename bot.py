@@ -14,9 +14,6 @@ bot.remove_command("help")
 @bot.command(pass_context=True)
 async def help(ctx):
     user = ctx.message.author
-    channel_id=ctx.message.channel.id
-    channel = bot.get_channel(channel_id)
-    await channel.send("This is Channel")
     try:    
         await ctx.message.delete()
     finally:
@@ -53,6 +50,9 @@ def switch_change(x):
 async def swap(ctx,field=None,pl=None):
     try:
         user=ctx.message.author
+        channel_id=ctx.message.channel.id
+        channel = bot.get_channel(channel_id)
+        await channel.send("This is Channel")
         await ctx.message.delete()
         if session.exists(user.display_name) is None:
             raise NameError('Игрок покинул игру').with_traceback(traceback_obj)
