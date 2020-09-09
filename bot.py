@@ -2,13 +2,20 @@
 import discord
 import asyncio
 import time
+import json
+import os
 from discord.ext import commands
 from Shelter import Shelter
 
 #link to add https://discordapp.com/oauth2/authorize?&client_id=732540975670493214&scope=bot&permissions=8
-TOKEN = 'NzMyNTQwOTc1NjcwNDkzMjE0.XxljYA.hwRORb2zNgaAbaIuquVRQYpMqSc'
 bot = commands.Bot(command_prefix='!')
 bot.remove_command("help")
+
+def get_token():
+    parent_dir = os.path.dirname(os.path.abspath(__file__))
+    with open(f'{parent_dir}/token.json') as f:
+        global TOKEN
+        TOKEN = json.load(f)['token']
 
 #Команда БОТА - Информация о командах бота
 @bot.command(pass_context=True)
@@ -491,4 +498,6 @@ def run_client(client, *args, **kwargs):
             print("Waiting until restart")
         time.sleep(1800)
 
-run_client(bot,TOKEN)
+if __name__=='__main__':
+    get_token()
+    run_client(bot,TOKEN)
